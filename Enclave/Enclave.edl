@@ -1,0 +1,19 @@
+enclave {
+	from "sgx_tkey_exchange.edl" import *;
+	include "sgx_key_exchange.h"
+
+	trusted {
+		public void ecall_print_hello();
+		public sgx_status_t ecall_enclave_ra_init(int b_pse, [out] sgx_ra_context_t *ctx);
+
+		public sgx_status_t ecall_enclave_ra_close(sgx_ra_context_t ctx);
+
+		public sgx_status_t ecall_enclave_ra_get_key_hash(
+			[out] sgx_status_t *get_keys_status, sgx_ra_context_t ctx,
+			sgx_ra_key_type_t type, [out] sgx_sha256_hash_t *hash);
+	};
+
+	untrusted {
+		void ocall_print_string([in, string] const char *str);
+	};
+};
