@@ -97,13 +97,13 @@ int main()
 	memset(&session, 0, sizeof(ra_session_t));
 
 	// to be filled
-	char *ias_signing_cert = ""; // file path
+	char *ias_signing_cert = "Intel_SGX_Attestation_RootCA.cer"; // file path
 	char *ca_bundle = "";		 // file path
-	char *ias_pri_api_key = "";	 // file path
-	char *ias_sec_api_key = "";	 // file path
+	char *ias_pri_api_key = "primary_key";	 // file path
+	char *ias_sec_api_key = "secondary_key";	 // file path
 	char *mrsigner = "";		 // hexstring
 	char *product_id = "0";
-	char *spid_file = ""; // file path
+	char *spid_file = "SPID"; // file path
 	char *min_isvsvn = "0";
 
 	//=========test SSLConnection=========
@@ -146,12 +146,13 @@ int main()
 		printf("%s: could not initialize certificate store\n", ias_signing_cert);
 		return 1;
 	}
-	config.ca_bundle = strdup(ca_bundle); // CA bundle used to validate the IAS server certificate
-	if (config.ca_bundle == NULL)
-	{
-		perror("strdup");
-		return 1;
-	}
+
+	// config.ca_bundle = strdup(ca_bundle); // CA bundle used to validate the IAS server certificate
+	// if (config.ca_bundle == NULL)
+	// {
+	// 	perror("strdup");
+	// 	return 1;
+	// }
 
 	// Get Size of File, should be IAS_SUBSCRIPTION_KEY_SIZE + EOF
 	ret = from_file(NULL, ias_pri_api_key, &offset);
@@ -171,7 +172,7 @@ int main()
 			   IAS_SUBSCRIPTION_KEY_SIZE);
 		return 1;
 	}
-
+	printf("Primary_key:%s\n", config.pri_subscription_key);
 	// Get Size of File, should be IAS_SUBSCRIPTION_KEY_SIZE + EOF
 	ret = from_file(NULL, ias_sec_api_key, &offset);
 	if ((offset != IAS_SUBSCRIPTION_KEY_SIZE + 1) || (ret == 0))
